@@ -1,0 +1,37 @@
+# Archivos de datos
+*.db
+*_data/
+data/
+
+# Caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Entornos virtuales
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logging
+*.log
+
+# Índices y catálogos
+catalog.json
+*.dat
+*.idx
+
+/databases
