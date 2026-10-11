@@ -147,6 +147,13 @@ python .\xai\demo_bayes_runtime_validation.py
 
 # Batch processing of docs/CONSULTAS_100.sql
 python .\xai\demo_batch_analysis.py
+
+# Generate the extended 1--6 table workload and its audit manifest
+python -m xai.experimental_workload
+
+# Full reproducible paper evaluation (5 seeds, 3 sizes, 3 distributions)
+python -m xai.research_evaluation `
+  --output-dir databases/research_evaluation --orders 4 --bootstrap 250
 ```
 
 The batch analysis writes its results to `databases/feature_analysis/`. These
@@ -154,6 +161,27 @@ outputs include estimated features for each plan, runtime traces, a query
 summary, and experiment metadata. Fidelity is evaluated by comparing estimated
 and observed work, including q-error and the intermediate rows produced by each
 join.
+
+The research evaluation is intentionally separate from the legacy demo. It
+generates a six-table star schema under uniform, skewed, and correlated data;
+enumerates only connected left-deep plans; evaluates the Ridge surrogate with
+query-grouped cross-validation; reports R², MAE, rank agreement, and top-1
+agreement; and bootstraps 95% confidence intervals for SHAP importance across
+seeds. It also generates a local `PAPER_RESULTS.md` summary from the CSV
+evidence; that derived summary is intentionally not versioned.
+
+Rank agreement is reported only when candidate target costs define an ordering.
+For BayesCard all candidate orders are tied in this implementation, so its rank
+metrics are explicitly marked as not applicable rather than assigned zero.
+
+For a quick development check before the full grid:
+
+```powershell
+python -m xai.research_evaluation `
+  --output-dir databases/research_smoke `
+  --seeds 1 --sizes small --distributions uniform `
+  --orders 2 --query-limit 22 --bootstrap 20
+```
 
 ## Persistence
 
@@ -209,6 +237,11 @@ This is an educational and research prototype, not a production DBMS.
 - Experimental validation shows that the Bayes model may assume filters are
   applied before joins, while the current executor evaluates `WHERE` afterward.
   Runtime traces exist specifically to measure this difference.
+- The natural-language explanation is deterministic and template-based. The
+  current implementation does not call an external LLM.
+- The research evaluation is a proof of concept. It does not establish DBA
+  productivity benefits and does not benchmark modern learned or adaptive
+  optimizers.
 
 ## Academic Background
 

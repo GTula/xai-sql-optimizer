@@ -5,21 +5,21 @@ Test simple para verificar que el motor funciona
 
 import os
 import shutil
+import tempfile
 from database import Database
 
 
 def test_basic_functionality():
     """Test básico: crear tabla, insertar, recuperar datos"""
-    
-    # Limpiar
-    if os.path.exists("test_db.db"):
-        shutil.rmtree("test_db.db", ignore_errors=True)
-    
+    test_root = tempfile.mkdtemp(prefix="minidb_test_")
+    db_path = os.path.join(test_root, "test_db.db")
+    db = None
+
     print("Testing minidb...")
     
     try:
         # Crear base de datos
-        db = Database("test_db.db")
+        db = Database(db_path)
         
         # Test 1: CREATE TABLE
         print("✓ Test 1: CREATE TABLE")
@@ -73,9 +73,9 @@ def test_basic_functionality():
         return False
     
     finally:
-        # Limpiar
-        if os.path.exists("test_db.db"):
-            shutil.rmtree("test_db.db", ignore_errors=True)
+        if db is not None:
+            db.close()
+        shutil.rmtree(test_root, ignore_errors=True)
 
 
 if __name__ == '__main__':

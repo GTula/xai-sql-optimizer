@@ -1,0 +1,13 @@
+.tools/
+graphify-out/
+.pytest_cache/
+**/__pycache__/
+*.py[cod]
+
+paper-and-poster/experimental-results/PAPER_RESULTS.md
+paper-and-poster/final-paper/build/
+paper-and-poster/final-paper/data/
+paper-and-poster/final-paper/figures/
+paper-and-poster/final-paper/*.png
+paper-and-poster/final-paper/*.pdf
+paper-and-poster/final-paper/*.zip

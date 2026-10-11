@@ -56,24 +56,22 @@ def generate_candidate_plans(
     espacio de búsqueda real de BayesCard, cuyo DP siempre ancla la tabla FROM.
     fix_base_table=False (Selinger, BasicOptimizer): permuta todas las tablas.
 
-    Nota: para consultas con N tablas hay N! permutaciones. Con max_plans=50
-    y N≥5 (120 perms) se corta el muestreo. Si N≤4 se cubren todas.
+    Solo se conservan órdenes left-deep conectados. En una estrella con la
+    tabla de hechos fija hay (N-1)! órdenes; sin fijarla puede haber hasta
+    2*(N-1)! órdenes conectados. ``max_plans`` limita la enumeración.
     """
     if not stmt.join_clauses:
         return [copy.deepcopy(stmt)]
 
     # primero obtenemos todas las tablas de la consulta
     tables = [stmt.from_table] + [jc.table for jc in stmt.join_clauses]
-    # condition_map: tabla → condición de join original
-    condition_map: Dict[str, object] = {
-        jc.table: jc.condition for jc in stmt.join_clauses
-    }
+    join_conditions = [jc.condition for jc in stmt.join_clauses]
 
     plans: List[SelectStatement] = []
     seen: set = set()
 
     # Siempre incluir el plan original primero
-    _add_permuted_plan(plans, seen, stmt, tables, condition_map)
+    _add_permuted_plan(plans, seen, stmt, tables, join_conditions)
 
     if fix_base_table:
         # Solo permuta los JOINs, la tabla FROM queda fija (igual que BayesCard)
@@ -84,13 +82,13 @@ def generate_candidate_plans(
             _add_permuted_plan(
                 plans, seen, stmt,
                 [stmt.from_table] + list(perm),
-                condition_map,
+                join_conditions,
             )
     else:
         for perm in itertools.permutations(tables):
             if len(plans) >= max_plans:
                 break
-            _add_permuted_plan(plans, seen, stmt, list(perm), condition_map)
+            _add_permuted_plan(plans, seen, stmt, list(perm), join_conditions)
 
     return plans
 
@@ -100,22 +98,41 @@ def _add_permuted_plan(
     seen: set,
     stmt: SelectStatement,
     table_order: List[str],
-    condition_map: Dict[str, object],
+    join_conditions: List[object],
 ) -> None:
-    """Agrega un plan (order de tablas) a la lista si no fue visto antes."""
+    """Agrega un orden left-deep conectado y conserva sus predicados.
+
+    El predicado se asigna cuando la tabla nueva queda conectada con una tabla
+    ya visible. Los órdenes que requieren un producto cartesiano intermedio se
+    descartan porque el ejecutor actual no soporta ``JOIN`` sin condición.
+    """
     key = tuple(table_order)
     if key in seen:
         return
-    seen.add(key)
+
+    visible = {table_order[0]}
+    unused = list(join_conditions)
+    reordered_joins: List[JoinClause] = []
+    for table_name in table_order[1:]:
+        chosen = None
+        for condition in unused:
+            referenced = _tables_in_expression(condition)
+            if table_name in referenced and referenced.intersection(visible):
+                chosen = condition
+                break
+        if chosen is None:
+            return
+        reordered_joins.append(JoinClause(table_name, copy.deepcopy(chosen)))
+        unused.remove(chosen)
+        visible.add(table_name)
+
+    if unused:
+        return
 
     new_stmt = copy.deepcopy(stmt)
-    # la tabla principal va a ser la primera del orden dado
     new_stmt.from_table = table_order[0]
-    # Asignar condición original de cada tabla; si la tabla era from_table
-    # (sin condición propia), condition_map.get devuelve None → JOIN sin ON.
-    new_stmt.join_clauses = [
-        JoinClause(t, condition_map.get(t)) for t in table_order[1:]
-    ]
+    new_stmt.join_clauses = reordered_joins
+    seen.add(key)
     plans.append(new_stmt)
 
 

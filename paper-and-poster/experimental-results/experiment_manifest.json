@@ -1,0 +1,764 @@
+{
+  "config": {
+    "seeds": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "sizes": [
+      "small",
+      "medium",
+      "large"
+    ],
+    "distributions": [
+      "uniform",
+      "skewed",
+      "correlated"
+    ],
+    "optimizers": [
+      "selinger",
+      "bayes"
+    ],
+    "max_plans": 50,
+    "max_orders_per_table_count": 4,
+    "bootstrap_iterations": 250,
+    "top_k": 5,
+    "query_limit": null
+  },
+  "query_count": 112,
+  "feature_rows": 180180,
+  "candidate_observations": 10080,
+  "ridge_runs": 90,
+  "ridge_fit_times": [
+    {
+      "run_id": "large_correlated_seed1_bayes",
+      "seed": "1",
+      "size_label": "large",
+      "distribution": "correlated",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 413.50360005162656
+    },
+    {
+      "run_id": "large_correlated_seed1_selinger",
+      "seed": "1",
+      "size_label": "large",
+      "distribution": "correlated",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 395.065100165084
+    },
+    {
+      "run_id": "large_correlated_seed2_bayes",
+      "seed": "2",
+      "size_label": "large",
+      "distribution": "correlated",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 347.28409978561103
+    },
+    {
+      "run_id": "large_correlated_seed2_selinger",
+      "seed": "2",
+      "size_label": "large",
+      "distribution": "correlated",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 463.75019988045096
+    },
+    {
+      "run_id": "large_correlated_seed3_bayes",
+      "seed": "3",
+      "size_label": "large",
+      "distribution": "correlated",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 432.79160000383854
+    },
+    {
+      "run_id": "large_correlated_seed3_selinger",
+      "seed": "3",
+      "size_label": "large",
+      "distribution": "correlated",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 523.4188002068549
+    },
+    {
+      "run_id": "large_correlated_seed4_bayes",
+      "seed": "4",
+      "size_label": "large",
+      "distribution": "correlated",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 413.68839982897043
+    },
+    {
+      "run_id": "large_correlated_seed4_selinger",
+      "seed": "4",
+      "size_label": "large",
+      "distribution": "correlated",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 493.3931000996381
+    },
+    {
+      "run_id": "large_correlated_seed5_bayes",
+      "seed": "5",
+      "size_label": "large",
+      "distribution": "correlated",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 591.644300147891
+    },
+    {
+      "run_id": "large_correlated_seed5_selinger",
+      "seed": "5",
+      "size_label": "large",
+      "distribution": "correlated",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 656.6147999837995
+    },
+    {
+      "run_id": "large_skewed_seed1_bayes",
+      "seed": "1",
+      "size_label": "large",
+      "distribution": "skewed",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 436.2205998040736
+    },
+    {
+      "run_id": "large_skewed_seed1_selinger",
+      "seed": "1",
+      "size_label": "large",
+      "distribution": "skewed",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 495.51720009185374
+    },
+    {
+      "run_id": "large_skewed_seed2_bayes",
+      "seed": "2",
+      "size_label": "large",
+      "distribution": "skewed",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 629.761400166899
+    },
+    {
+      "run_id": "large_skewed_seed2_selinger",
+      "seed": "2",
+      "size_label": "large",
+      "distribution": "skewed",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 577.6532001327723
+    },
+    {
+      "run_id": "large_skewed_seed3_bayes",
+      "seed": "3",
+      "size_label": "large",
+      "distribution": "skewed",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 406.13859985023737
+    },
+    {
+      "run_id": "large_skewed_seed3_selinger",
+      "seed": "3",
+      "size_label": "large",
+      "distribution": "skewed",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 464.8015999700874
+    },
+    {
+      "run_id": "large_skewed_seed4_bayes",
+      "seed": "4",
+      "size_label": "large",
+      "distribution": "skewed",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 470.2694001607597
+    },
+    {
+      "run_id": "large_skewed_seed4_selinger",
+      "seed": "4",
+      "size_label": "large",
+      "distribution": "skewed",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 524.849999928847
+    },
+    {
+      "run_id": "large_skewed_seed5_bayes",
+      "seed": "5",
+      "size_label": "large",
+      "distribution": "skewed",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 491.6848000138998
+    },
+    {
+      "run_id": "large_skewed_seed5_selinger",
+      "seed": "5",
+      "size_label": "large",
+      "distribution": "skewed",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 595.8728000987321
+    },
+    {
+      "run_id": "large_uniform_seed1_bayes",
+      "seed": "1",
+      "size_label": "large",
+      "distribution": "uniform",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 461.80130005814135
+    },
+    {
+      "run_id": "large_uniform_seed1_selinger",
+      "seed": "1",
+      "size_label": "large",
+      "distribution": "uniform",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 591.9714998453856
+    },
+    {
+      "run_id": "large_uniform_seed2_bayes",
+      "seed": "2",
+      "size_label": "large",
+      "distribution": "uniform",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 540.9091000910848
+    },
+    {
+      "run_id": "large_uniform_seed2_selinger",
+      "seed": "2",
+      "size_label": "large",
+      "distribution": "uniform",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 534.5655998680741
+    },
+    {
+      "run_id": "large_uniform_seed3_bayes",
+      "seed": "3",
+      "size_label": "large",
+      "distribution": "uniform",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 434.46889985352755
+    },
+    {
+      "run_id": "large_uniform_seed3_selinger",
+      "seed": "3",
+      "size_label": "large",
+      "distribution": "uniform",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 551.1048000771552
+    },
+    {
+      "run_id": "large_uniform_seed4_bayes",
+      "seed": "4",
+      "size_label": "large",
+      "distribution": "uniform",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 520.7638000138104
+    },
+    {
+      "run_id": "large_uniform_seed4_selinger",
+      "seed": "4",
+      "size_label": "large",
+      "distribution": "uniform",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 516.7228002101183
+    },
+    {
+      "run_id": "large_uniform_seed5_bayes",
+      "seed": "5",
+      "size_label": "large",
+      "distribution": "uniform",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 416.73910012468696
+    },
+    {
+      "run_id": "large_uniform_seed5_selinger",
+      "seed": "5",
+      "size_label": "large",
+      "distribution": "uniform",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 566.0145001020283
+    },
+    {
+      "run_id": "medium_correlated_seed1_bayes",
+      "seed": "1",
+      "size_label": "medium",
+      "distribution": "correlated",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 456.7727001849562
+    },
+    {
+      "run_id": "medium_correlated_seed1_selinger",
+      "seed": "1",
+      "size_label": "medium",
+      "distribution": "correlated",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 490.79519999213517
+    },
+    {
+      "run_id": "medium_correlated_seed2_bayes",
+      "seed": "2",
+      "size_label": "medium",
+      "distribution": "correlated",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 519.2295999731869
+    },
+    {
+      "run_id": "medium_correlated_seed2_selinger",
+      "seed": "2",
+      "size_label": "medium",
+      "distribution": "correlated",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 610.4703999590129
+    },
+    {
+      "run_id": "medium_correlated_seed3_bayes",
+      "seed": "3",
+      "size_label": "medium",
+      "distribution": "correlated",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 518.2280000299215
+    },
+    {
+      "run_id": "medium_correlated_seed3_selinger",
+      "seed": "3",
+      "size_label": "medium",
+      "distribution": "correlated",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 493.32270002923906
+    },
+    {
+      "run_id": "medium_correlated_seed4_bayes",
+      "seed": "4",
+      "size_label": "medium",
+      "distribution": "correlated",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 404.5198999810964
+    },
+    {
+      "run_id": "medium_correlated_seed4_selinger",
+      "seed": "4",
+      "size_label": "medium",
+      "distribution": "correlated",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 491.27160012722015
+    },
+    {
+      "run_id": "medium_correlated_seed5_bayes",
+      "seed": "5",
+      "size_label": "medium",
+      "distribution": "correlated",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 367.7207001019269
+    },
+    {
+      "run_id": "medium_correlated_seed5_selinger",
+      "seed": "5",
+      "size_label": "medium",
+      "distribution": "correlated",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 475.0995000358671
+    },
+    {
+      "run_id": "medium_skewed_seed1_bayes",
+      "seed": "1",
+      "size_label": "medium",
+      "distribution": "skewed",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 444.0206999424845
+    },
+    {
+      "run_id": "medium_skewed_seed1_selinger",
+      "seed": "1",
+      "size_label": "medium",
+      "distribution": "skewed",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 592.8946000058204
+    },
+    {
+      "run_id": "medium_skewed_seed2_bayes",
+      "seed": "2",
+      "size_label": "medium",
+      "distribution": "skewed",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 490.82259996794164
+    },
+    {
+      "run_id": "medium_skewed_seed2_selinger",
+      "seed": "2",
+      "size_label": "medium",
+      "distribution": "skewed",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 580.7362999767065
+    },
+    {
+      "run_id": "medium_skewed_seed3_bayes",
+      "seed": "3",
+      "size_label": "medium",
+      "distribution": "skewed",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 417.69349994137883
+    },
+    {
+      "run_id": "medium_skewed_seed3_selinger",
+      "seed": "3",
+      "size_label": "medium",
+      "distribution": "skewed",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 475.8003999013454
+    },
+    {
+      "run_id": "medium_skewed_seed4_bayes",
+      "seed": "4",
+      "size_label": "medium",
+      "distribution": "skewed",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 460.1374000776559
+    },
+    {
+      "run_id": "medium_skewed_seed4_selinger",
+      "seed": "4",
+      "size_label": "medium",
+      "distribution": "skewed",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 552.6493999641389
+    },
+    {
+      "run_id": "medium_skewed_seed5_bayes",
+      "seed": "5",
+      "size_label": "medium",
+      "distribution": "skewed",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 504.33110003359616
+    },
+    {
+      "run_id": "medium_skewed_seed5_selinger",
+      "seed": "5",
+      "size_label": "medium",
+      "distribution": "skewed",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 597.9051999747753
+    },
+    {
+      "run_id": "medium_uniform_seed1_bayes",
+      "seed": "1",
+      "size_label": "medium",
+      "distribution": "uniform",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 435.48969994299114
+    },
+    {
+      "run_id": "medium_uniform_seed1_selinger",
+      "seed": "1",
+      "size_label": "medium",
+      "distribution": "uniform",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 581.4386999700218
+    },
+    {
+      "run_id": "medium_uniform_seed2_bayes",
+      "seed": "2",
+      "size_label": "medium",
+      "distribution": "uniform",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 450.43640001676977
+    },
+    {
+      "run_id": "medium_uniform_seed2_selinger",
+      "seed": "2",
+      "size_label": "medium",
+      "distribution": "uniform",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 613.6988999787718
+    },
+    {
+      "run_id": "medium_uniform_seed3_bayes",
+      "seed": "3",
+      "size_label": "medium",
+      "distribution": "uniform",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 463.3808999788016
+    },
+    {
+      "run_id": "medium_uniform_seed3_selinger",
+      "seed": "3",
+      "size_label": "medium",
+      "distribution": "uniform",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 485.0120998453349
+    },
+    {
+      "run_id": "medium_uniform_seed4_bayes",
+      "seed": "4",
+      "size_label": "medium",
+      "distribution": "uniform",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 439.1890000551939
+    },
+    {
+      "run_id": "medium_uniform_seed4_selinger",
+      "seed": "4",
+      "size_label": "medium",
+      "distribution": "uniform",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 659.0064000338316
+    },
+    {
+      "run_id": "medium_uniform_seed5_bayes",
+      "seed": "5",
+      "size_label": "medium",
+      "distribution": "uniform",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 617.6618000026792
+    },
+    {
+      "run_id": "medium_uniform_seed5_selinger",
+      "seed": "5",
+      "size_label": "medium",
+      "distribution": "uniform",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 576.1239000130445
+    },
+    {
+      "run_id": "small_correlated_seed1_bayes",
+      "seed": "1",
+      "size_label": "small",
+      "distribution": "correlated",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 517.4102999735624
+    },
+    {
+      "run_id": "small_correlated_seed1_selinger",
+      "seed": "1",
+      "size_label": "small",
+      "distribution": "correlated",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 525.7085000630468
+    },
+    {
+      "run_id": "small_correlated_seed2_bayes",
+      "seed": "2",
+      "size_label": "small",
+      "distribution": "correlated",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 464.0448000282049
+    },
+    {
+      "run_id": "small_correlated_seed2_selinger",
+      "seed": "2",
+      "size_label": "small",
+      "distribution": "correlated",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 549.9920002184808
+    },
+    {
+      "run_id": "small_correlated_seed3_bayes",
+      "seed": "3",
+      "size_label": "small",
+      "distribution": "correlated",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 422.9343000333756
+    },
+    {
+      "run_id": "small_correlated_seed3_selinger",
+      "seed": "3",
+      "size_label": "small",
+      "distribution": "correlated",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 557.4447000399232
+    },
+    {
+      "run_id": "small_correlated_seed4_bayes",
+      "seed": "4",
+      "size_label": "small",
+      "distribution": "correlated",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 481.39280010946095
+    },
+    {
+      "run_id": "small_correlated_seed4_selinger",
+      "seed": "4",
+      "size_label": "small",
+      "distribution": "correlated",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 490.27290008962154
+    },
+    {
+      "run_id": "small_correlated_seed5_bayes",
+      "seed": "5",
+      "size_label": "small",
+      "distribution": "correlated",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 432.07790004089475
+    },
+    {
+      "run_id": "small_correlated_seed5_selinger",
+      "seed": "5",
+      "size_label": "small",
+      "distribution": "correlated",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 530.8101999107748
+    },
+    {
+      "run_id": "small_skewed_seed1_bayes",
+      "seed": "1",
+      "size_label": "small",
+      "distribution": "skewed",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 446.6868999879807
+    },
+    {
+      "run_id": "small_skewed_seed1_selinger",
+      "seed": "1",
+      "size_label": "small",
+      "distribution": "skewed",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 521.5312999207526
+    },
+    {
+      "run_id": "small_skewed_seed2_bayes",
+      "seed": "2",
+      "size_label": "small",
+      "distribution": "skewed",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 341.29060013219714
+    },
+    {
+      "run_id": "small_skewed_seed2_selinger",
+      "seed": "2",
+      "size_label": "small",
+      "distribution": "skewed",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 460.44240007176995
+    },
+    {
+      "run_id": "small_skewed_seed3_bayes",
+      "seed": "3",
+      "size_label": "small",
+      "distribution": "skewed",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 440.54229999892414
+    },
+    {
+      "run_id": "small_skewed_seed3_selinger",
+      "seed": "3",
+      "size_label": "small",
+      "distribution": "skewed",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 481.0908001381904
+    },
+    {
+      "run_id": "small_skewed_seed4_bayes",
+      "seed": "4",
+      "size_label": "small",
+      "distribution": "skewed",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 386.90139981918037
+    },
+    {
+      "run_id": "small_skewed_seed4_selinger",
+      "seed": "4",
+      "size_label": "small",
+      "distribution": "skewed",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 607.952400110662
+    },
+    {
+      "run_id": "small_skewed_seed5_bayes",
+      "seed": "5",
+      "size_label": "small",
+      "distribution": "skewed",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 490.199499996379
+    },
+    {
+      "run_id": "small_skewed_seed5_selinger",
+      "seed": "5",
+      "size_label": "small",
+      "distribution": "skewed",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 512.7856999170035
+    },
+    {
+      "run_id": "small_uniform_seed1_bayes",
+      "seed": "1",
+      "size_label": "small",
+      "distribution": "uniform",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 362.89680004119873
+    },
+    {
+      "run_id": "small_uniform_seed1_selinger",
+      "seed": "1",
+      "size_label": "small",
+      "distribution": "uniform",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 488.19039994850755
+    },
+    {
+      "run_id": "small_uniform_seed2_bayes",
+      "seed": "2",
+      "size_label": "small",
+      "distribution": "uniform",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 506.9951999466866
+    },
+    {
+      "run_id": "small_uniform_seed2_selinger",
+      "seed": "2",
+      "size_label": "small",
+      "distribution": "uniform",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 564.0773999039084
+    },
+    {
+      "run_id": "small_uniform_seed3_bayes",
+      "seed": "3",
+      "size_label": "small",
+      "distribution": "uniform",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 498.03449981845915
+    },
+    {
+      "run_id": "small_uniform_seed3_selinger",
+      "seed": "3",
+      "size_label": "small",
+      "distribution": "uniform",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 496.3664000388235
+    },
+    {
+      "run_id": "small_uniform_seed4_bayes",
+      "seed": "4",
+      "size_label": "small",
+      "distribution": "uniform",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 540.5117000918835
+    },
+    {
+      "run_id": "small_uniform_seed4_selinger",
+      "seed": "4",
+      "size_label": "small",
+      "distribution": "uniform",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 520.9458998870105
+    },
+    {
+      "run_id": "small_uniform_seed5_bayes",
+      "seed": "5",
+      "size_label": "small",
+      "distribution": "uniform",
+      "optimizer": "bayes",
+      "ridge_fit_ms": 455.916800070554
+    },
+    {
+      "run_id": "small_uniform_seed5_selinger",
+      "seed": "5",
+      "size_label": "small",
+      "distribution": "uniform",
+      "optimizer": "selinger",
+      "ridge_fit_ms": 468.4574001003057
+    }
+  ],
+  "scope": {
+    "claim": "proof_of_concept",
+    "runtime_validation": "separate experiment",
+    "dba_user_study": "not performed",
+    "modern_optimizers": "future work"
+  },
+  "ranking_policy": "queries with constant target cost are excluded from ranking metrics; missing rank metrics are reported as not applicable",
+  "fidelity_across_seed_groups": 18
+}

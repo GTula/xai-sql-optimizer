@@ -1,0 +1,3 @@
+optimizer,search,cardinality_source,base_table,candidate_space
+Selinger,dynamic programming over connected left-deep orders,catalog row counts and NDV,not fixed,up to 2*(N-1)! on the star schema
+BayesCard,dynamic programming with probabilistic selectivity estimates,Bayesian profiles with catalog fallback,FROM table fixed,(N-1)! on the star schema

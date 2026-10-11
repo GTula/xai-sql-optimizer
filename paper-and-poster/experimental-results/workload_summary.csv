@@ -1,0 +1,13 @@
+table_count,join_count,query_templates,optimizer,mean_candidate_plans,min_candidate_plans,max_candidate_plans,cap_frequency
+1,0,12,bayes,1.0,1,1,0.0
+1,0,12,selinger,1.0,1,1,0.0
+2,1,20,bayes,1.0,1,1,0.0
+2,1,20,selinger,2.0,2,2,0.0
+3,2,20,bayes,2.0,2,2,0.0
+3,2,20,selinger,4.0,4,4,0.0
+4,3,20,bayes,6.0,6,6,0.0
+4,3,20,selinger,12.0,12,12,0.0
+5,4,20,bayes,24.0,24,24,0.0
+5,4,20,selinger,48.0,48,48,0.0
+6,5,20,bayes,50.0,50,50,1.0
+6,5,20,selinger,50.0,50,50,1.0
