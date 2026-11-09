@@ -1,7 +1,6 @@
-# Paper and Poster
+# Paper
 
-This directory contains the academic materials associated with the project,
-separate from the implementation in [`../code/`](../code/).
+This directory contains the final paper associated with the project, separate
+from the implementation in [`../code/`](../code/).
 
-- `paper.pdf`: project paper or reference manuscript.
-
+- `paper.pdf`: *Making SQL Query Optimization Explainable*.

@@ -54,7 +54,7 @@ class SelingerOptimizer(QueryOptimizer):
             return stmt
             
         tables = [stmt.from_table] + [jc.table for jc in stmt.join_clauses]
-        original_conditions = {jc.table: jc.condition for jc in stmt.join_clauses}
+        join_conditions = [jc.condition for jc in stmt.join_clauses]
         
         # dp[frozenset(tables)] = (cost, list_of_tables_in_order)
         dp: Dict[frozenset, Tuple[float, List[str]]] = {}
@@ -72,21 +72,19 @@ class SelingerOptimizer(QueryOptimizer):
                 
                 for t in subset:
                     prev_subset = frozenset(s for s in subset if s != t)
+                    if prev_subset not in dp:
+                        continue
+
+                    condition = self._connecting_condition(
+                        t, set(prev_subset), join_conditions
+                    )
+                    if condition is None:
+                        continue
+
                     prev_cost, prev_order = dp[prev_subset]
                     
                     t_cost = self._get_table_cost(t)
-                    
-                    # Buscar la condicion que conecta a t con prev_subset
-                    cond = None
-                    if t in original_conditions:
-                        cond = original_conditions[t]
-                    else:
-                        for oc_t, oc_cond in original_conditions.items():
-                            # Simplificación: tomar una condición
-                            cond = oc_cond
-                            break
-                            
-                    selectivity = self._estimate_selectivity(cond)
+                    selectivity = self._estimate_selectivity(condition)
                     
                     current_cost = prev_cost * t_cost * selectivity
                     
@@ -94,34 +92,58 @@ class SelingerOptimizer(QueryOptimizer):
                         best_cost = current_cost
                         best_order = prev_order + [t]
                         
-                dp[subset_fs] = (best_cost, best_order)
-                
-        _, final_order = dp[frozenset(tables)]
+                if best_order is not None:
+                    dp[subset_fs] = (best_cost, best_order)
+
+        final_entry = dp.get(frozenset(tables))
+        if final_entry is None:
+            return stmt
+        _, final_order = final_entry
         
         # Reconstruir AST
         new_stmt = copy.deepcopy(stmt)
         new_stmt.from_table = final_order[0]
         
         new_joins = []
-        used_conditions_ids = set()
-        
+        unused_conditions = list(join_conditions)
+        visible = {final_order[0]}
         for t in final_order[1:]:
-            # Asignar condición al JoinClause
-            cond = None
-            if t in original_conditions and id(original_conditions[t]) not in used_conditions_ids:
-                cond = original_conditions[t]
-                used_conditions_ids.add(id(cond))
-            else:
-                # Si no era la tabla original que traía la condición, buscamos una libre
-                for oc_t, oc_cond in original_conditions.items():
-                    if id(oc_cond) not in used_conditions_ids:
-                        cond = oc_cond
-                        used_conditions_ids.add(id(cond))
-                        break
-            new_joins.append(JoinClause(t, cond))
+            condition = self._connecting_condition(t, visible, unused_conditions)
+            if condition is None:
+                return stmt
+            new_joins.append(JoinClause(t, copy.deepcopy(condition)))
+            unused_conditions.remove(condition)
+            visible.add(t)
             
         new_stmt.join_clauses = new_joins
         return new_stmt
+
+    @staticmethod
+    def _tables_in_expression(expression) -> Set[str]:
+        if expression is None:
+            return set()
+        table = getattr(expression, "table", None)
+        if table:
+            return {table}
+        tables: Set[str] = set()
+        for attribute in ("left", "right", "operand"):
+            child = getattr(expression, attribute, None)
+            if child is not None:
+                tables.update(SelingerOptimizer._tables_in_expression(child))
+        return tables
+
+    @classmethod
+    def _connecting_condition(
+        cls,
+        table_name: str,
+        visible_tables: Set[str],
+        conditions: List[object],
+    ):
+        for condition in conditions:
+            referenced = cls._tables_in_expression(condition)
+            if table_name in referenced and referenced.intersection(visible_tables):
+                return condition
+        return None
         
     def _get_table_cost(self, table_name: str) -> float:
         if not self.catalog:
