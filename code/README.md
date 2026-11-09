@@ -1,118 +1,33 @@
-# motor_SQL — Explainable SQL Engine
+# motor_SQL
 
-`motor_SQL` is a relational database prototype written in Python. The project
-covers the complete query-processing pipeline: tokenization, AST construction,
-semantic validation, `JOIN` order optimization, execution, and persistence.
+A small relational database engine written in Python, built to study how SQL
+optimizers choose join orders and how to explain those choices with SHAP.
 
-In addition to the basic engine, it includes an experimental research track on
-cardinality estimation and optimizer explainability. It compares a basic
-execution order, a Selinger-inspired optimizer, and a BayesCard integration. The
-XAI layer analyzes why a plan was selected and compares its estimates with
-metrics observed at runtime.
+It parses SQL into an AST, validates it, reorders joins with one of three
+optimizers, and executes the query over CSV-backed tables. The `xai/` package
+explains the optimizer's estimated cost for each candidate plan.
 
-## Features
-
-- Custom SQL parser and validator.
-- Execution of `SELECT`, `INSERT`, `CREATE TABLE`, `CREATE INDEX`, and `ANALYSE`.
-- Queries with filters, Boolean expressions, and multiple `JOIN` clauses.
-- Support for `INTEGER`, `VARCHAR`, `FLOAT`, `BOOLEAN`, and `DATE` types.
-- File-based persistence for data, catalog metadata, statistics, and indexes.
-- Three join-ordering strategies:
-  - `basic`: preserves the order written in the query;
-  - `selinger`: uses dynamic programming, cardinalities, and the number of
-    distinct values (NDV);
-  - `bayes`: uses BayesCard-based cardinality estimates.
-- Local plan explanations using SHAP, including a natural-language summary,
-  positive and negative factors, and a comparison with the runner-up plan.
-- Instrumented execution for comparing estimated and observed features.
-- Batch query analysis with CSV and JSON result persistence.
-
-## Query Pipeline
-
-```text
-SQL
- └─> Tokenizer ─> Parser/AST ─> Validator ─> Optimizer ─> ExecutionEngine
-                             catalog/statistics ↑       └─> CSV tables
-                                        XAI ────────────> explanations and traces
-```
-
-The `Database` class is the facade that connects these components. When a
-statement is executed, `ExecutionEngine` parses and validates it. For `SELECT`
-queries, the optimizer may reorder joins before the engine executes them using
-nested loops.
-
-## Requirements and Installation
-
-- Python 3.9 or later.
-- A virtual environment is recommended.
-
-Using PowerShell:
+## Setup
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
-The core engine mainly uses the Python standard library. The dependencies in
-`requirements.txt` are required for BayesCard and the XAI experiments. The demo
-that generates global feature-importance charts also requires `matplotlib`:
+Python 3.9+. The core engine only uses the standard library; the dependencies
+are for BayesCard and the XAI experiments. `xai/demo_explainer.py` also needs
+`matplotlib`.
+
+## Usage
 
 ```powershell
-python -m pip install matplotlib
+python main.py repl        # interactive console (statements end with ;)
+python main.py example     # scripted example
+python test_minidb.py      # end-to-end test of the engine
 ```
 
-## Quick Start
-
-Run the main workflow test:
-
-```powershell
-python .\test_minidb.py
-```
-
-Run the programmatic example:
-
-```powershell
-python .\main.py example
-```
-
-Open the interactive console:
-
-```powershell
-python .\main.py repl
-```
-
-You can also provide the logical database name:
-
-```powershell
-python .\main.py repl my_database.db
-```
-
-Inside the REPL, every statement must end with `;`. Use `HELP;` to display help
-and `EXIT;` to close the session.
-
-```sql
-CREATE TABLE instructor (
-    id INTEGER,
-    name VARCHAR(50),
-    dept VARCHAR(30),
-    salary FLOAT
-);
-
-INSERT INTO instructor VALUES
-    (1, 'Einstein', 'Physics', 95000),
-    (2, 'Mozart', 'Music', 40000),
-    (3, 'Darwin', 'Biology', 60000);
-
-ANALYSE instructor;
-
-SELECT name, salary
-FROM instructor
-WHERE salary > 50000;
-```
-
-## Python API
+From Python:
 
 ```python
 from database import Database
@@ -120,136 +35,62 @@ from database import Database
 with Database("research.db", optimizer_type="selinger") as db:
     db.execute("CREATE TABLE department (id INTEGER, name VARCHAR(50))")
     db.execute("INSERT INTO department VALUES (1, 'Physics')")
-    rows = db.execute("SELECT id, name FROM department")
-    print(rows)
+    print(db.execute("SELECT id, name FROM department"))
 ```
 
-`optimizer_type` accepts `basic`, `selinger`, `bayes`, or `bayescard`. Running
-`ANALYSE [table]` before experimenting with the optimizers updates the
-cardinalities and NDVs used by their cost models.
+`optimizer_type` can be `basic` (keeps the written order), `selinger`
+(dynamic programming over row counts and distinct values) or `bayes`
+(BayesCard estimates). Run `ANALYSE <table>;` first so the optimizers have
+statistics.
 
-## Explainability and Experiments
+Supported: `CREATE TABLE`, `INSERT`, `SELECT` with filters and multiple
+`JOIN`s, `CREATE INDEX`, `ANALYSE`.
 
-The `xai/` package treats the optimizer as the system being explained without
-changing its decisions. For each query containing joins, it can enumerate
-candidate plans, extract structural and cost features, calculate SHAP
-contributions, and produce a contrastive explanation comparing the selected plan
-with its closest alternative.
-
-The main experiments are:
+## Reproducing the paper
 
 ```powershell
-# Global feature importance across the query workload
-python .\xai\demo_explainer.py
-
-# Comparison between Bayes estimates and runtime work
-python .\xai\demo_bayes_runtime_validation.py
-
-# Batch processing of docs/CONSULTAS_100.sql
-python .\xai\demo_batch_analysis.py
-
-# Generate the extended 1--6 table workload and its audit manifest
-python -m xai.experimental_workload
-
-# Full reproducible paper evaluation (5 seeds, 3 sizes, 3 distributions)
-python -m xai.research_evaluation `
-  --output-dir databases/research_evaluation --orders 4 --bootstrap 250
+python -m xai.research_evaluation --output-dir databases/research_evaluation --orders 4 --bootstrap 250
 ```
 
-The batch analysis writes its results to `databases/feature_analysis/`. These
-outputs include estimated features for each plan, runtime traces, a query
-summary, and experiment metadata. Fidelity is evaluated by comparing estimated
-and observed work, including q-error and the intermediate rows produced by each
-join.
-
-The research evaluation is intentionally separate from the legacy demo. It
-generates a six-table star schema under uniform, skewed, and correlated data;
-enumerates only connected left-deep plans; evaluates the Ridge surrogate with
-query-grouped cross-validation; reports R², MAE, rank agreement, and top-1
-agreement; and bootstraps 95% confidence intervals for SHAP importance across
-seeds. It also generates a local `PAPER_RESULTS.md` summary from the CSV
-evidence; that derived summary is intentionally not versioned.
-
-Rank agreement is reported only when candidate target costs define an ordering.
-For BayesCard all candidate orders are tied in this implementation, so its rank
-metrics are explicitly marked as not applicable rather than assigned zero.
-
-For a quick development check before the full grid:
+This generates the six-table synthetic schema, runs the 112-query workload for
+both optimizers over 5 seeds, 3 sizes and 3 distributions, and writes the CSVs
+with Ridge fidelity, SHAP stability and timing results. For a quick check:
 
 ```powershell
-python -m xai.research_evaluation `
-  --output-dir databases/research_smoke `
-  --seeds 1 --sizes small --distributions uniform `
-  --orders 2 --query-limit 22 --bootstrap 20
+python -m xai.research_evaluation --output-dir databases/research_smoke --seeds 1 --sizes small --distributions uniform --orders 2 --query-limit 22 --bootstrap 20
 ```
 
-## Persistence
+Other scripts in `xai/`: `demo_explainer.py` (global SHAP importance),
+`demo_bayes_runtime_validation.py` (estimates vs. runtime, q-error) and
+`demo_batch_analysis.py` (runs `docs/CONSULTAS_100.sql`).
 
-Opening `Database("my_database.db")` creates the following structure next to the
-provided path:
+## Structure
 
-```text
-databases/
-├── catalog/
-│   ├── databases.csv
-│   ├── tables.csv
-│   ├── columns.csv
-│   ├── indexes.csv
-│   ├── statistics.csv
-│   └── column_stats.csv
-└── my_database/
-    ├── <table>.csv
-    └── <index>.idx
-```
-
-The `.db` argument identifies the database, but data is currently stored in this
-CSV and index hierarchy rather than inside a single database file.
-
-## Repository Structure
-
-| Path | Responsibility |
+| Folder | Contents |
 | --- | --- |
-| `database.py` | Public facade for the engine. |
-| `sql/` | Tokenizer, parser, AST, validation, and optimizers. |
-| `catalog/` | CSV-based metadata and statistics. |
-| `executor/` | AST execution and physical operators. |
-| `index/` | Persistent B-tree implementation. |
-| `bayescard/` | BayesCard estimator adaptation and source code. |
-| `xai/` | Features, SHAP, explanations, traces, and batch analysis. |
-| `demo_bn_db/` | Small dataset used by the demonstrations. |
-| `docs/` | Technical inventory, explainability notes, and test queries. |
+| `sql/` | Tokenizer, parser, AST, validator and optimizers |
+| `executor/` | Query execution |
+| `catalog/` | Table metadata and statistics |
+| `index/` | B-tree index |
+| `bayescard/` | Adapted BayesCard estimator |
+| `xai/` | Plan features, SHAP, explanations, runtime traces, experiments |
+| `docs/` | Test workloads and file documentation |
 
-For a file-by-file inventory, see
-[`docs/DOCUMENTACION_ARCHIVOS.md`](docs/DOCUMENTACION_ARCHIVOS.md).
+Data is stored as CSV files under `databases/`.
 
-## Current Scope and Limitations
+## Limitations
 
-This is an educational and research prototype, not a production DBMS.
+This is a research prototype. Joins run as in-memory nested loops, indexes are
+not used by `SELECT`, and `UPDATE`, `DELETE`, `ORDER BY`, `GROUP BY` and
+subqueries are not implemented.
 
-- Tables are read from CSV files and joins are executed in memory using nested
-  loops. There is no page-based storage or buffer pool.
-- `CREATE INDEX` registers the index and creates its B-tree file, but it does not
-  yet load existing rows or provide an access path for `SELECT`.
-- The parser defines structures for `UPDATE` and `DELETE`, but the execution
-  engine does not yet implement these statements.
-- `ORDER BY`, `GROUP BY`, subqueries, and transactions are not currently
-  supported.
-- Experimental validation shows that the Bayes model may assume filters are
-  applied before joins, while the current executor evaluates `WHERE` afterward.
-  Runtime traces exist specifically to measure this difference.
-- The natural-language explanation is deterministic and template-based. The
-  current implementation does not call an external LLM.
-- The research evaluation is a proof of concept. It does not establish DBA
-  productivity benefits and does not benchmark modern learned or adaptive
-  optimizers.
+The engine produces structured explanations (SHAP values, main factors,
+runner-up comparison). In the paper, these outputs are passed to an LLM
+(Gemini) to write the natural-language summary; that step is not part of this
+repository.
 
-## Academic Background
+## References
 
-The probabilistic integration is based on **BayesCard: Revitilizing Bayesian
-Frameworks for Cardinality Estimation**, by Ziniu Wu, Amir Shaikhha, Rong Zhu,
-Kai Zeng, Yuxing Han, and Jingren Zhou. The paper proposes using Bayesian
-networks to provide accurate, interpretable, and efficient cardinality estimates
-for query optimization.
-
-- [Paper on arXiv](https://arxiv.org/abs/2012.14743)
-- [Original BayesCard implementation](https://github.com/wuziniu/BayesCard)
+Wu et al., *BayesCard: Revitalizing Bayesian Frameworks for Cardinality
+Estimation*, 2020. [arXiv](https://arxiv.org/abs/2012.14743) ·
+[original code](https://github.com/wuziniu/BayesCard)
